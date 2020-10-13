@@ -1,7 +1,12 @@
 package LiquidCrystal
 
 import (
+	"fmt"
+	"strconv"
+
 	"periph.io/x/periph/conn/gpio"
+	"periph.io/x/periph/conn/gpio/gpioreg"
+	"periph.io/x/periph/host"
 )
 
 const (
@@ -45,7 +50,7 @@ const (
 )
 
 type DataPin struct {
-	data        string
+	//data        string //???? - хз
 	values      uint8
 	hardwarePin gpio.PinIO
 }
@@ -70,44 +75,75 @@ var (
 	Pins Datas
 )
 
-/*
-	rs_pin          uint8
-	rw_pin          uint8
-	enable_pin      uint8
-	data_pins       [8]uint8
-	displayFunction uint8
-	displayControl  uint8
-	displayMode     uint8
-	initialized     uint8
-	numLines        uint8
-	row_offsets     [4]uint8
-	//-----------------------
-	names [8]namePin
-)
-*/
 
 // Init(fourbitmode,rs,rw,enable,d0,d1,d2,d3,d4,d5,d6,d7 uint8)
 // init display
 func Init(fourbitmode, rs, rw, enable, d0, d1, d2, d3, d4, d5, d6, d7 uint8) {
-	/*rs_pin = rs
-	rw_pin = rw
-	enable_pin = enable
-	data_pins[0] = d0
-	data_pins[1] = d1
-	data_pins[2] = d2
-	data_pins[3] = d3
-	data_pins[4] = d4
-	data_pins[5] = d5
-	data_pins[6] = d6
-	data_pins[7] = d7
-	*/
-	// register pins gpio.PinIO
 
-	if fourbitmode == 0 {
-		displayFunction = LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS
-	} else {
-		displayFunction = LCD_8BITMODE | LCD_1LINE | LCD_5x8DOTS
+	_ ,err := host.Init()
+	if err != nil{
+		fmt.Println("error, in host.init")
+	}else{
+		Pins.rs_pin.values          := rs
+		Pins.rs_pin.hardwarePin     := gpioreg.ByName(strconv.Itoa(rs)) 
+
+		Pins.rw_pin.values          := rw
+		Pins.rw_pin.hardwarePin     := gpioreg.ByName(strconv.Itoa(rw)) 
+
+		Pins.enable_pin.values      := enable
+		Pins.enable_pin.hardwarePin := gpioreg.ByName(strconv.Itoa(enable)) 
+
+		if d0 > 0{
+			Pins.data_pins[0].values      := d0
+			Pins.data_pins[0].hardwarePin := gpioreg.ByName(strconv.Itoa(d0)) 
+		}
+
+		if d1 > 0{
+			Pins.data_pins[1].values      := d1
+			Pins.data_pins[1].hardwarePin := gpioreg.ByName(strconv.Itoa(d1)) 
+		}
+
+		if d2 > 0{
+			Pins.data_pins[2].values      := d2
+			Pins.data_pins[2].hardwarePin := gpioreg.ByName(strconv.Itoa(d2)) 
+		}
+
+		if d3 > 0{
+			Pins.data_pins[3].values      := d3
+			Pins.data_pins[3].hardwarePin := gpioreg.ByName(strconv.Itoa(d3)) 
+		}
+
+		if d4 > 0{
+			Pins.data_pins[4].values      := d4
+			Pins.data_pins[4].hardwarePin := gpioreg.ByName(strconv.Itoa(d4)) 
+		}
+
+		if d5 > 0{
+			Pins.data_pins[5].values      := d5
+			Pins.data_pins[5].hardwarePin := gpioreg.ByName(strconv.Itoa(d5)) 
+		}
+
+		if d6 > 0{
+			Pins.data_pins[6].values      := d6
+			Pins.data_pins[6].hardwarePin := gpioreg.ByName(strconv.Itoa(d6)) 
+		}
+
+		if d7 > 0{
+			Pins.data_pins[7].values      := d7
+			Pins.data_pins[7].hardwarePin := gpioreg.ByName(strconv.Itoa(d7)) 
+		}
+
+		
+
+		// register pins gpio.PinIO
+
+		if fourbitmode == 0 {
+			Pins.displayFunction := LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS
+		} else {
+			Pins.displayFunction := LCD_8BITMODE | LCD_1LINE | LCD_5x8DOTS
+		}
 	}
+	
 }
 
 //func Begin(cols, lines, dotsize uint8)
